@@ -14,6 +14,8 @@ tn.read_until(b"Password:")
 tn.write(password.encode("ascii")+b"\n")
 
 tn.write(b"show startup-config\n")
+tn.write(b"\n")
+tn.write(b"show version\n")
 tn.write(b"end\n")
 tn.write(b"\n")
 tn.write(b"exit\n")
