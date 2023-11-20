@@ -44,6 +44,33 @@ class TelnetParserRouter(Telnet):
 
         return self.read_until(self.convert_bytes(read_to), timeout=5).decode("ascii")
 
+    def get_version_router(self, read_to: str) -> str:
+
+        self.send_command("show version")
+        out = self.get_info("Configuration register")
+        self.get_info("#")
+        return out[out.find('Version'): out.find('RELEASE')-2]
+
+    def get_start_configuration(self):
+
+        self.send_command("show startup-config")
+        config = self.get_info("end\n")
+        config = self.clean_string(config[config.find('Using'):config.find('\nend\r')])
+        self.get_info("#")
+        return config
+
+    def clean_string(self, txt: str) -> str:
+
+        return txt.replace('\r', '').replace('!', '').replace('\n\nend', '').replace('\n\n\n', '\n')\
+            .replace('\n\n\nend', '').replace("\n\n\n\n", "\n\n").replace('\n\n\n', '\n')
+
+    def get_current_configuration(self):
+
+        self.send_command("show running-config")
+        config = self.get_info("end\n")
+        config = self.clean_string(config[config.find('Current'):config.find('\nend\r')])
+        return config
+
     def close_connect(self):
 
         logging.info("Закрываем соединение")
