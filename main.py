@@ -18,7 +18,9 @@ if __name__ == '__main__':
 
     logging.info("Собираем информацию о роутере")
     telnet_client.send_command("terminal length 0")
-    print("Версия коммутатора: %s\n" % (telnet_client.get_version_router("Technical Support")))
-    print("Стартовая конфигурация:\n\n%s\n" % telnet_client.get_start_configuration())
-    print("Текущая конфигурация:\n\n%s\n" % telnet_client.get_current_configuration())
+    print("ВЕРСИЯ КОММУТАТОРА: %s\n" % (telnet_client.get_version_router()))
+    print("СТАРТОВАЯ КОНФИГУРАЦИЯ:\n\n%s\n" % telnet_client.get_start_configuration())
+    print("ТЕКУЩАЯ КОНФИГУРАЦИЯ:\n\n%s\n" % telnet_client.get_current_configuration())
+    print("ИНТЕРФЕЙСЫ:\n %s\n" % telnet_client.get_interface_info())
+    print("СВЕДЕНИЯ О СПИСКАХ КОНТРОЛЯ ДОСТУПА (ACL) КОММУТАТОРА:\n %s \n" % telnet_client.get_acl_info())
     telnet_client.close_connect()
