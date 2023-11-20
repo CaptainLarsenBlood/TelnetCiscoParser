@@ -1,28 +1,21 @@
-import getpass
-import telnetlib
+from TelnetParser import TelnetParserRouter
 
-HOST = '10.1.1.3'
-user = "R1"
+host = '10.1.1.3'
+username = "R1"
 password = "12345"
-print('Successfully passed getpass')
-tn = telnetlib.Telnet(HOST)
-print('Successfully passed telnet')
-tn.read_until(b"Username:")
-tn.write(user.encode("ascii") + b"\n")
+secret_pas = "cisco"
 
-tn.read_until(b"Password:")
-tn.write(password.encode("ascii")+b"\n")
 
-tn.write(b"show startup-config\n")
-tn.write(b"\n")
-tn.write(b"show version\n")
-tn.write(b"end\n")
-tn.write(b"\n")
-tn.write(b"exit\n")
-res = tn.read_all().decode("ascii")
-print(res)
-res = res.split(',')
-model_router = res[1].strip()
-version = res[2].strip()
-
-print(res)
+if __name__ == '__main__':
+    telnet_client = TelnetParserRouter()
+    telnet_client.connect_router(host)
+    telnet_client.login_router(username, password)
+    telnet_client.login_admin(secret_pas)
+    telnet_client.send_command("terminal length 0")
+    telnet_client.send_command("show startup-config")
+    startup_info = telnet_client.get_info("end")
+    telnet_client.send_command("show running-config")
+    running_info = telnet_client.get_info("end\n")
+    telnet_client.send_command("show version")
+    router_info = telnet_client.get_info("Technical Support")
+    telnet_client.close_connect()
